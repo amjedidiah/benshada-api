@@ -11,7 +11,15 @@ const OrdersSchema = new Schema({
 		ref: 'Products',
 		type: Schema.Types.ObjectId
 	}],
+	transaction: {
+		ref: 'Transactions',
+		type: Schema.Types.ObjectId
+	},
 	totalPrice: Number,
+	status: {
+		type: String,
+		default: 'unpaid'
+	},
 	isDeleted: {
 		default: false,
 		type: Boolean
@@ -20,4 +28,4 @@ const OrdersSchema = new Schema({
 		timestamps: true
 	})
 
-mongoose.model('Orders', OrdersSchema)
+module.exports = mongoose.model('Orders', OrdersSchema)

@@ -3,18 +3,38 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const ProductsSchema = new Schema({
-	name: String,
-	description: String,
-	user: {
-		ref: 'Users',
+	name: {
+		required: true,
+		type: String
+	},
+	description: {
+		type: String,
+		required: true
+	},
+	shop: {
+		ref: 'Shops',
 		type: Schema.Types.ObjectId
 	},
 	reviews: [{
 		ref: 'Reviews',
 		type: Schema.Types.ObjectId
 	}],
-	price: Number,
-	discountPercentage: Number,
+	overallRating: {
+		type: Number,
+		default: 0
+	},
+	inStock: {
+		type: Boolean,
+		default: true
+	},
+	price: {
+		type: Number,
+		required: true
+	},
+	discountPercentage: {
+		type: Number,
+		default: 0
+	},
 	isDeleted: {
 		default: false,
 		type: Boolean
@@ -23,4 +43,4 @@ const ProductsSchema = new Schema({
 	timestamps: true
 })
 
-mongoose.model('Products', ProductsSchema)
+module.exports = mongoose.model('Products', ProductsSchema)

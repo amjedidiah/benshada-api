@@ -7,6 +7,10 @@ const TransactionsSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Users'
 	},
+	order: {
+		type: Schema.Types.ObjectId,
+		ref: 'Orders'
+	},
 	trxnRef: String,
 	amount: Number,
 	isDeleted: {

@@ -3,10 +3,18 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const ShopsSchema = new Schema({
-	name: String,
+	name: {
+		type: String,
+		required: true,
+	},
+	description: {
+		type: String,
+		required: true
+	},
 	user: {
 		type: Schema.Types.ObjectId,
-		ref: 'Users'
+		ref: 'Users',
+		required: true
 	},
 	products: [{
 		type: Schema.Types.ObjectId,
@@ -20,4 +28,4 @@ const ShopsSchema = new Schema({
 		timestamps: true
 	});
 
-mongoose.model('Shops', ShopsSchema) 
+module.exports = mongoose.model('Shops', ShopsSchema) 

@@ -3,15 +3,20 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const ReviewsSchema = new Schema({
-	rating: Number,
+	rating: {
+		type: Number,
+		required: true
+	},
 	description: String,
 	user: {
 		ref: 'Users',
-		type: Schema.Types.ObjectId
+		type: Schema.Types.ObjectId,
+		required: true
 	},
 	product: {
-		ref: 'Reviews',
-		type: Schema.Types.ObjectId
+		ref: 'Products',
+		type: Schema.Types.ObjectId,
+		required: true
 	},
 	isDeleted: {
 		default: false,
@@ -21,4 +26,4 @@ const ReviewsSchema = new Schema({
 		timestamps: true
 	})
 
-mongoose.model('Reviews', ReviewsSchema)
+module.exports = mongoose.model('Reviews', ReviewsSchema)
