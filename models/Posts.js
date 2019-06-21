@@ -7,8 +7,22 @@ const PostsSchema = new Schema({
 		ref: 'Users',
 		type: Schema.Types.ObjectId
 	},
-	title: String,
-	description: String,
+	image: {
+		type: String,
+		required: true
+	},
+	title: {
+		type: String,
+		required: true
+	},
+	description: {
+		type: String,
+		required: true
+	},
+	datePosted: {
+		type: Date,
+		default: new Date()
+	},
 	isDeleted: {
 		default: false,
 		type: Boolean

@@ -102,7 +102,7 @@ router.post('/signup', auth.optional, (req, res) => {
 		}))
 })
 
-router.post('/login', auth.optional, (req, res) => {
+router.post('/admin-login', auth.optional, (req, res)  => {
 	const { email, password } = req.body;
 
 	if (!email || !password) res.status(400).send({
@@ -113,15 +113,13 @@ router.post('/login', auth.optional, (req, res) => {
 
 	return Users.findOne({ email, isDeleted: false })
 		.then(user => {
-			if (!user){
+			if (!user || user.type !== 'admin') {
 				return res.status(404).send({
 					data: null,
 					message: 'Email or Password is incorrect',
 					error: true
 				})
-			}
-
-			if (user.validatePassword(password)){
+			} else if (user.validatePassword(password)) {
 				return res.status(200).send({
 					data: user.toAuthJSON(),
 					message: 'Signup successful',
@@ -142,6 +140,82 @@ router.post('/login', auth.optional, (req, res) => {
 				error: true
 			})
 		})
+})
+
+router.post('/login', auth.optional, (req, res) => {
+	const { email, password } = req.body;
+
+	if (!email || !password) res.status(400).send({
+		data: null,
+		message: 'Email or Password is required',
+		error: true
+	})
+
+	return Users.findOne({ email, isDeleted: false })
+		.then(user => {
+			if (!user) res.status(404).send({
+				data: null,
+				message: 'Email or Password is incorrect',
+				error: true
+			})
+			else if (user.validatePassword(password)) res.status(200).send({
+				data: user.toAuthJSON(),
+				message: 'Signup successful',
+				error: false
+			})
+			else res.status(404).send({
+				data: null,
+				message: 'Email or Password is incorrect',
+				error: true
+			})
+		})
+		.catch(err =>  res.status(500).send({
+			data: null,
+			message: err,
+			error: true
+		}))
+})
+
+router.post('/reset-password', auth.required, (req, res) => {
+	const { password, oldPassword, email } = req.body
+
+	if (!password || !oldPassword || !email) res.status(400).send({
+		data: null,
+		message: 'Incomplete Data',
+		error: true
+	})
+
+	return Users.findOne({ email, isDeleted: false })
+		.then(user => {
+			if (!user) res.status(404).send({
+				data: null,
+				message: 'Email or Password is incorrect',
+				error: true
+			})
+			else if (user.validatePassword(oldPassword)){
+				const finalUser = user.getPassword(password)
+				Users.findByIdAndUpdate(user._id, { ...finalUser })
+					.then(() => res.status(200).send({
+						data: user.toAuthJSON(),
+						message: 'Password reset Successfully',
+						error: false
+					}))
+					.catch(err => res.status(500).send({
+						data: null,
+						message: err,
+						error: true
+					}))
+			} else res.status(404).send({
+				data: null,
+				message: 'Incorrect Username or Password',
+				error: true
+			})
+		})
+		.catch(err => res.status(500).send({
+			data: null,
+			message: err,
+			error: true
+		}))
 })
 
 module.exports = router
