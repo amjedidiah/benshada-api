@@ -5,14 +5,22 @@ const { Schema } = mongoose;
 const TransactionsSchema = new Schema({
 	user: {
 		type: Schema.Types.ObjectId,
-		ref: 'Users'
+		ref: 'Users',
+		required: true
 	},
 	order: {
 		type: Schema.Types.ObjectId,
-		ref: 'Orders'
+		ref: 'Orders',
+		required: true
 	},
-	trxnRef: String,
-	amount: Number,
+	trxnRef: {
+		type: String,
+		required: true
+	},
+	amount: {
+		type: Number,
+		required: true
+	},
 	isDeleted: {
 		default: false,
 		type: Boolean
