@@ -15,6 +15,7 @@ const isProduction = process.env.NODE_ENV === "production";
 
 //Initiate our app
 const app = express();
+const port = process.env.PORT || 8000
 
 //Configure our app
 app.use(cors());
@@ -54,4 +55,4 @@ require("./config/passport");
 
 app.use(routes);
 
-app.listen(8000, () => console.log("Server running on http://localhost:8000/"));
+app.listen(port, () => console.log(`Server running on http://localhost:${port}/`));
