@@ -42,7 +42,7 @@ if (!isProduction) {
 
 //Configure Mongoose JD
 mongoose
-  .connect(DB_DEV, { useNewUrlParser: true })
+  .connect(DB_PROD, { useNewUrlParser: true })
   .then(() => console.log("DB Connected"))
   .catch(() => console.warn("DB Connection Failed"));
 
