@@ -122,7 +122,7 @@ router.post('/admin-login', auth.optional, (req, res)  => {
 			} else if (user.validatePassword(password)) {
 				return res.status(200).send({
 					data: user.toAuthJSON(),
-					message: 'Signup successful',
+					message: 'Login successful',
 					error: false
 				})
 			} else {
@@ -160,7 +160,7 @@ router.post('/login', auth.optional, (req, res) => {
 			})
 			else if (user.validatePassword(password)) res.status(200).send({
 				data: user.toAuthJSON(),
-				message: 'Signup successful',
+				message: 'Login successful',
 				error: false
 			})
 			else res.status(404).send({
