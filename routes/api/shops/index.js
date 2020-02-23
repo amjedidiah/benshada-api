@@ -38,7 +38,7 @@ router.get('/:id', auth.optional, (req, res) => {
 
 	return Shops.findById(id)
 		.populate('user', '_id name city')
-		.populate('products', '_id name description price discountPercentage')
+		.populate('products', '_id name description price discountPercentage category gender quantity image')
 		.then(data => {
 			if (data === null) res.status(404).send({
 				data,

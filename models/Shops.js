@@ -20,6 +20,14 @@ const ShopsSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Products'
 	}],
+	bank: {
+		name: String,
+		accountNumber: String,
+		accountName: String
+	},
+	deliveryOptions: [{
+		type: String,
+	}],
 	isDeleted: {
 		default: false,
 		type: Boolean

@@ -13,15 +13,25 @@ const UsersSchema = new Schema({
     type: String,
     required: true
   },
+  phone: {
+    type: String,
+    required: true
+  },
   type: {
     default: 'user',
     type: String
   },
+  image: String,
   address: String,
   city: String,
   state: String,
+  country: String,
   shops: [{ 
     ref: 'Shops',
+    type: Schema.Types.ObjectId
+  }],
+  saved: [{
+    ref: 'Products',
     type: Schema.Types.ObjectId
   }],
   hash: String,

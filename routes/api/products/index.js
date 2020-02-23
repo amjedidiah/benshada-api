@@ -2,6 +2,7 @@ const router = require('express').Router()
 const auth = require('../../auth')
 const Products = require('../../../models/Products')
 const Shops = require('../../../models/Shops')
+const Users = require('../../../models/Users')
 
 router.get('/', auth.optional, (req, res) => {
 	return Products.find({ ...req.query, isDeleted: false })
@@ -116,6 +117,75 @@ router.delete('/:id', auth.required, (req, res) => {
 			message: err,
 			error: true
 		}))
+})
+
+router.post('/save/:id', auth.required, (req, res) => {
+	const product = req.params.id
+	const userId = req.body.userId
+
+	Users
+		.findById(userId)
+		.then(user => {
+			if (!user) return res.status(404).send({
+				data: null,
+				message: 'User not found',
+				error: true
+			})
+
+			const saved = user.saved || []
+			if (saved.includes(product)) return res.status(400).send({
+				data: null,
+				message: 'Product already saved',
+				error: false
+			})
+
+			saved.push(product)
+			Users
+				.findByIdAndUpdate(userId, { saved })
+				.then(() => res.status(200).send({
+					data: null,
+					message: 'Product saved successfully'
+				}))
+				.catch(err => res.status(500).send({
+					data: null,
+					message: err,
+					error: true
+				}))
+		})
+})
+router.post('/unsave/:id', auth.required, (req, res) => {
+	const product = req.params.id
+	const userId = req.body.userId
+
+	Users
+		.findById(userId)
+		.then(user => {
+			if (!user) return res.status(404).send({
+				data: null,
+				message: 'User not found',
+				error: true
+			})
+
+			const saved = user.saved || []
+			if (!saved.includes(product)) return res.status(400).send({
+				data: null,
+				message: 'Product not saved',
+				error: false
+			})
+
+			saved.splice(saved.indexOf(product), 1)
+			Users
+				.findByIdAndUpdate(userId, { saved })
+				.then(() => res.status(200).send({
+					data: null,
+					message: 'Product removed successfully'
+				}))
+				.catch(err => res.status(500).send({
+					data: null,
+					message: err,
+					error: true
+				}))
+		})
 })
 
 module.exports = router

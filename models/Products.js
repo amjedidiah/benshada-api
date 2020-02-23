@@ -19,6 +19,23 @@ const ProductsSchema = new Schema({
 		ref: 'Reviews',
 		type: Schema.Types.ObjectId
 	}],
+	category: {
+		type: String,
+		required: false
+	},
+	gender: {
+		type: String,
+		required: true,
+		enum: ['male', 'female']
+	},
+	quantity: {
+		type: Number,
+		default: 0
+	},
+	image: {
+		type: String,
+		required: true
+	},
 	overallRating: {
 		type: Number,
 		default: 0
