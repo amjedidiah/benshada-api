@@ -16,6 +16,10 @@ const ShopsSchema = new Schema({
 		ref: 'Users',
 		required: true
 	},
+	policies: {
+		type: String,
+		required: true,
+	},
 	products: [{
 		type: Schema.Types.ObjectId,
 		ref: 'Products'
@@ -25,6 +29,10 @@ const ShopsSchema = new Schema({
 		accountNumber: String,
 		accountName: String
 	},
+	categories: [{
+		type: String,
+		enum: ['bags', 'clothes', 'shoes', 'accessories']
+	}],
 	deliveryOptions: [{
 		type: String,
 	}],
