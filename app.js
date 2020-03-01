@@ -6,7 +6,13 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const errorHandler = require("errorhandler");
 const routes = require("./routes/");
-const { DB_DEV, DB_PROD } = require("./config/constants");
+const { 
+  DB_DEV,
+  DB_PROD,
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET
+} = require("./config/constants");
 //Configure mongoose's promise to global promise
 mongoose.promise = global.Promise;
 
@@ -16,6 +22,13 @@ const isProduction = process.env.NODE_ENV === "production";
 //Initiate our app
 const app = express();
 const port = process.env.PORT || 8000
+
+// Setup cloud storage
+cloudinary.config({
+  cloud_name: CLOUDINARY_CLOUD_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
+});
 
 //Configure our app
 app.use(cors());

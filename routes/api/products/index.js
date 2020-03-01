@@ -3,6 +3,7 @@ const auth = require('../../auth')
 const Products = require('../../../models/Products')
 const Shops = require('../../../models/Shops')
 const Users = require('../../../models/Users')
+const upload = require('../../../config/upload')
 
 router.get('/', auth.optional, (req, res) => {
 	return Products.find({ ...req.query, isDeleted: false })
@@ -20,10 +21,11 @@ router.get('/', auth.optional, (req, res) => {
 		}))
 })
 
-router.post('/', auth.required, (req, res) => {
+router.post('/', auth.required, upload, (req, res) => {
 	const { shop } = req.body
+	const { image } = req.data
 
-	return new Products({ ...req.body })
+	return new Products({ ...req.body, image })
 		.save()
 		.then(data => {
 			Shops.findOne({ _id: shop, isDeleted: false })

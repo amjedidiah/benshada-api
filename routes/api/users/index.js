@@ -76,8 +76,9 @@ router.delete('/:email', auth.required, (req, res) => {
 		}))
 })
 
-router.post('/signup', auth.optional, (req, res) => {
+router.post('/signup', auth.optional, upload, (req, res) => {
 	const user = req.body;
+	const { image } = req.data;
 
 	if (!user.password) res.status(400).send({
 		data: null,
@@ -85,7 +86,7 @@ router.post('/signup', auth.optional, (req, res) => {
 		error: true
 	})
 
-	const finalUser = new Users(user);
+	const finalUser = new Users({ ...user, image });
 
 	finalUser.setPassword(user.password);
 
