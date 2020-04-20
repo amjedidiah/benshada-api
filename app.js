@@ -6,6 +6,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const errorHandler = require("errorhandler");
 const routes = require("./routes/");
+const cloudinary = require("cloudinary")
 const { 
   DB_DEV,
   DB_PROD,

@@ -1,6 +1,10 @@
 const router = require('express').Router();
 const auth = require('../../auth');
+const bcrypt = require('bcrypt')
 const Users = require('../../../models/Users');
+const sendEmail = require('../../../config/sendMail')
+const upload = require('../../../config/upload')
+const Crypto = require('crypto-js')
 
 router.get('/', auth.required, (req, res) => {
 	return Users.find({ ...req.query, isDeleted: false }, { hash: 0, salt: 0 })
@@ -86,16 +90,38 @@ router.post('/signup', auth.optional, upload, (req, res) => {
 		error: true
 	})
 
-	const finalUser = new Users({ ...user, image });
+	Users
+		.findOne({ email: user.email, isDeleted: false })
+		.then(user => {
+			if (user) return res.status(401).send({
+				data: null,
+				message: 'Email already exists',
+				error: true
+			})
 
-	finalUser.setPassword(user.password);
+			else {
+				const finalUser = new Users({ ...user, image });
 
-	return finalUser.save()
-		.then(data => res.status(200).send({
-			data: data.toAuthJSON(),
-			message: 'Signup successful',
-			error: false
-		}))
+				finalUser.setPassword(user.password);
+
+				return finalUser.save()
+					.then(data => {
+						const link = Crypto.AES.encrypt(email, 'benshadaSecret').toString()
+						await sendEmail('verifyAccount', email, data.name, { link })
+
+						return res.status(200).send({
+							data: data.toAuthJSON(),
+							message: 'Signup successful',
+							error: false
+						})
+					})
+					.catch(err => res.status(500).send({
+						data: null,
+						message: err,
+						error: true
+					}))
+			}
+		})
 		.catch(err => res.status(500).send({
 			data: null,
 			message: err,
@@ -177,7 +203,108 @@ router.post('/login', auth.optional, (req, res) => {
 		}))
 })
 
-router.post('/reset-password', auth.required, (req, res) => {
+router.post('/verify-user', auth.optional, (req, res) => {
+	const { hash } = req.body
+
+	const email = await CryptoJS.AES.decrypt(hash, 'benshadaSecret').toString(CryptoJS.enc.Utf8)
+
+	Users
+		.findOne({ email, isDeleted: false })
+		.then(async data => {
+			if (!data) return res.status(404).send({
+				data: null,
+				email: 'Invalid Link',
+				error: true
+			})
+			else {
+				Users
+					.findOneAndUpdate({ isVerified: true }, { ...finalUser })
+					.then(user => res.status(200).send({
+						data: user.toAuthJSON(),
+						message: 'User Verified Successfully',
+						error: false
+					}))
+					.catch(err => res.status(500).send({
+						data: null,
+						message: err,
+						error: true
+					}))
+			}
+		})
+})
+
+router.post('/send-reset-email', auth.optional, (req, res) => {
+	try {
+		const { email } = req.body
+
+		Users
+			.findOne({ email, isDeleted: false })
+			.then(async data => {
+				if (!data) return res.status(404).send({
+					data: null,
+					email: 'Email not found',
+					error: true
+				})
+				else {
+					const link = Crypto.AES.encrypt(email, 'benshadaSecret').toString()
+					await sendEmail('passwordReset', email, data.name, { link })
+
+					return res.status(200).send({
+						data: null,
+						message: 'Password Reset email sent',
+						error: false
+					})
+				}
+			})
+	} catch ({ message }) {
+		return res.status(500).send({
+			data: null,
+			message,
+			error: true
+		})
+	}
+})
+
+router.post('/reset-password', auth.optional, async (req, res) => {
+	try {
+		const { hash, password } = req.body
+
+		const email = await CryptoJS.AES.decrypt(hash, 'benshadaSecret').toString(CryptoJS.enc.Utf8)
+
+		Users
+			.findOne({ email, isDeleted: false })
+			.then(async user => {
+				if (!user) return res.status(404).send({
+					data: null,
+					email: 'Email not found',
+					error: true
+				})
+				else {
+					const finalUser = user.getPassword(password)
+					Users
+						.findOneAndUpdate({ email }, { ...finalUser })
+						.then(() => res.status(200).send({
+							data: user.toAuthJSON(),
+							message: 'Password reset Successfully',
+							error: false
+						}))
+						.catch(err => res.status(500).send({
+							data: null,
+							message: err,
+							error: true
+						}))
+				}
+			})
+	} catch ({ message }) {
+		return res.status(500).send({
+			data: null,
+			message,
+			error: true
+		})
+	}
+})
+
+router.post('/change-password', auth.required, (req, res) => {
 	const { password, oldPassword, email } = req.body
 
 	if (!password || !oldPassword || !email) res.status(400).send({
