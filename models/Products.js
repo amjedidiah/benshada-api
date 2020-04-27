@@ -51,10 +51,9 @@ const ProductsSchema = new Schema({
 		type: Number,
 		default: 0
 	},
-	image: {
+	image: [{
 		type: String,
-		required: true
-	},
+	}],
 	overallRating: {
 		type: Number,
 		default: 0

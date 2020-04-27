@@ -86,6 +86,7 @@ UsersSchema.methods.toAuthJSON = function() {
     address: this.address,
     city: this.city,
     state: this.state,
+    image: this.image,
     token: this.generateJWT(),
   };
 };
