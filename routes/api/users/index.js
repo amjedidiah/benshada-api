@@ -92,22 +92,24 @@ router.post('/signup', auth.optional, upload, (req, res) => {
 
 	Users
 		.findOne({ email: user.email, isDeleted: false })
-		.then(user => {
-			if (user) return res.status(401).send({
+		.then(found => {
+			if (found) return res.status(401).send({
 				data: null,
 				message: 'Email already exists',
 				error: true
 			})
 
 			else {
-				const finalUser = new Users({ ...user, image });
+				const finalUser = new Users({ ...user, image: image[0] });
 
 				finalUser.setPassword(user.password);
 
 				return finalUser.save()
-					.then(data => {
+					.then(async data => {
+						const { email, name } = data
 						const link = Crypto.AES.encrypt(email, 'benshadaSecret').toString()
-						await sendEmail('verifyAccount', email, data.name, { link })
+						console.log(link)
+						await sendEmail('verifyAccount', email, name, { link }, res)
 
 						return res.status(200).send({
 							data: data.toAuthJSON(),
@@ -203,7 +205,7 @@ router.post('/login', auth.optional, (req, res) => {
 		}))
 })
 
-router.post('/verify-user', auth.optional, (req, res) => {
+router.post('/verify-user', auth.optional, async (req, res) => {
 	const { hash } = req.body
 
 	const email = await CryptoJS.AES.decrypt(hash, 'benshadaSecret').toString(CryptoJS.enc.Utf8)
@@ -247,7 +249,8 @@ router.post('/send-reset-email', auth.optional, (req, res) => {
 				})
 				else {
 					const link = Crypto.AES.encrypt(email, 'benshadaSecret').toString()
-					await sendEmail('passwordReset', email, data.name, { link })
+					console.log(link)
+					await sendEmail('passwordReset', email, data.name, { link }, res)
 
 					return res.status(200).send({
 						data: null,

@@ -11,7 +11,7 @@ const upload = (req, res, next) => {
         error: true
       })
     } else {
-      const promises = values[0].map((file) => cloudinary.uploader.upload(file.path));
+      const promises = values.map((file) => cloudinary.uploader.upload(file.path));
 
       Promise
         .all(promises)

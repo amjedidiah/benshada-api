@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const errorHandler = require("errorhandler");
 const routes = require("./routes/");
 const cloudinary = require("cloudinary")
+const formData = require("express-form-data")
 const { 
   DB_DEV,
   DB_PROD,
@@ -36,6 +37,7 @@ app.use(cors());
 app.use(require("morgan")("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(formData.parse());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({

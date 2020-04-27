@@ -7,8 +7,27 @@ const ProductsSchema = new Schema({
 		required: true,
 		type: String
 	},
-	description: {
+	shortDescription: {
 		type: String,
+		required: true
+	},
+	longDescription: {
+		type: String,
+		required: true
+	},
+	specifications: {
+		sizes: [String],
+		colors: [String],
+		mainMaterial: String,
+		weight: String,
+		productionCountry: String
+	},
+	guarantee: {
+		type: Number,
+		required: true
+	},
+	deliveryTime: {
+		type: Number,
 		required: true
 	},
 	shop: {
