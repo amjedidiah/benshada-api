@@ -21,6 +21,7 @@ const UsersSchema = new Schema({
     default: 'user',
     type: String
   },
+  bio: String,
   image: String,
   address: String,
   street: String,
