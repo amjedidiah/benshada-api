@@ -23,6 +23,7 @@ const UsersSchema = new Schema({
   },
   image: String,
   address: String,
+  street: String,
   city: String,
   state: String,
   country: String,

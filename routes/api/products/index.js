@@ -91,10 +91,15 @@ router.get('/:id', auth.optional, (req, res) => {
 		}))
 })
 
-router.put('/:id', auth.required, (req, res) => {
+router.put('/:id', auth.required, upload, (req, res) => {
 	const { id } = req.params
+	const { image } = req.data
 
-	return Products.findByIdAndUpdate(id, { ...req.body }, { upsert: false })
+	let data = req.body
+
+	if (image) data = { ...req.data, image }
+
+	return Products.findByIdAndUpdate(id, data, { upsert: false })
 		.then(() => res.status(200).send({
 			data: null,
 			message: 'Product updated successfully'

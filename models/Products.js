@@ -16,8 +16,8 @@ const ProductsSchema = new Schema({
 		required: true
 	},
 	specifications: {
-		sizes: [String],
-		colors: [String],
+		size: String,
+		color: String,
 		mainMaterial: String,
 		weight: String,
 		productionCountry: String

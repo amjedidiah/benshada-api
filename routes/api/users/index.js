@@ -44,10 +44,15 @@ router.get('/:email', auth.required, (req, res) => {
 		}))
 })
 
-router.put('/:email', auth.required, (req, res) => {
+router.put('/:email', auth.required, upload, (req, res) => {
 	const { email } = req.params
+	const { image } = req.data;
 
-	return Users.findOneAndUpdate({ email }, { ...req.body })
+	let data = req.body
+
+	if (image) data = { ...req.data, image: image[0] }
+
+	return Users.findOneAndUpdate({ email }, data)
 		.then(() => {
 			res.status(200).send({
 				data: null,
