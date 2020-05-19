@@ -16,7 +16,10 @@ const ReviewsSchema = new Schema({
 	product: {
 		ref: 'Products',
 		type: Schema.Types.ObjectId,
-		required: true
+	},
+	shop: {
+		ref: 'Shops',
+		type: Schema.Types.ObjectId,
 	},
 	isDeleted: {
 		default: false,

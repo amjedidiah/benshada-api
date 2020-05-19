@@ -1,12 +1,14 @@
 const router = require('express').Router()
 const auth = require('../../auth')
 const Products = require('../../../models/Products')
+const Shops = require('../../../models/Shops')
 const Reviews = require('../../../models/Reviews')
 
 router.get('/', auth.optional, (req, res) => {
 	return Reviews.find({ ...req.query, isDeleted: false })
 		.populate('user', '_id name city')
 		.populate('product', '_id name description')
+		.populate('shop', '_id name description')
 		.then(data => res.status(200).send({
 			data,
 			message: 'Reviews fetched successfully',
@@ -19,7 +21,7 @@ router.get('/', auth.optional, (req, res) => {
 		}))
 })
 
-router.post('/', auth.required, (req, res) => {
+router.post('/product', auth.required, (req, res) => {
 	const { product, rating } = req.body
 
 	return new Reviews({ ...req.body })
@@ -38,6 +40,50 @@ router.post('/', auth.required, (req, res) => {
 						const newRating = ((rating + overallRating) / reviews.length)
 
 						Products.findByIdAndUpdate(product, { reviews, overallRating: newRating })
+							.then(() => res.status(200).send({
+								data,
+								message: 'Review added successfully',
+								error: false
+							}))
+							.catch(err => res.status(500).send({
+								data: null,
+								message: err,
+								error: true
+							}))
+					}
+				})
+				.catch(err => res.status(500).send({
+					data: null,
+					message: err,
+					error: true
+				}))
+		})
+		.catch(err => res.status(500).send({
+			data: null,
+			message: err,
+			error: true
+		}))
+})
+
+router.post('/shop', auth.required, (req, res) => {
+	const { shop, rating } = req.body
+
+	return new Reviews({ ...req.body })
+		.save()
+		.then(data => {
+			Shops.findOne({ _id: shop, isDeleted: false })
+				.then(prodData => {
+					if (prodData === null) res.status(404).send({
+						data: prodData,
+						message: 'Shop not found',
+						error: true
+					})
+					else {
+						const { reviews, overallRating } = prodData
+						reviews.push(data._id)
+						const newRating = ((rating + overallRating) / reviews.length)
+
+						Shops.findByIdAndUpdate(shop, { reviews, overallRating: newRating })
 							.then(() => res.status(200).send({
 								data,
 								message: 'Review added successfully',

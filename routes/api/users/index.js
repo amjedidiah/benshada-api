@@ -46,16 +46,14 @@ router.get('/:email', auth.required, (req, res) => {
 
 router.put('/:email', auth.required, upload, (req, res) => {
 	const { email } = req.params
-	const { image } = req.data;
+	console.log(email)
+	const image = req.data ? req.data.image : null
 
-	let data = req.body
-
-	if (image) data = { ...req.data, image: image[0] }
-
-	return Users.findOneAndUpdate({ email }, data)
-		.then(() => {
+	return Users
+		.findOneAndUpdate({ email }, { ...req.body, image: image ? image[0] : null }, { new: true })
+		.then(data => {
 			res.status(200).send({
-				data: null,
+				data: data,
 				message: 'User updated successfully',
 				error: false
 			})
@@ -105,7 +103,7 @@ router.post('/signup', auth.optional, upload, (req, res) => {
 			})
 
 			else {
-				const finalUser = new Users({ ...user, image: image[0] });
+				const finalUser = new Users({ ...user, image: image ? image[0] : null });
 
 				finalUser.setPassword(user.password);
 

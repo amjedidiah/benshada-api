@@ -13,14 +13,12 @@ const UsersSchema = new Schema({
     type: String,
     required: true
   },
-  phone: {
-    type: String,
-    required: true
-  },
+  phone: String,
   type: {
     default: 'user',
     type: String
   },
+  gender: String,
   bio: String,
   image: String,
   address: String,
@@ -28,6 +26,12 @@ const UsersSchema = new Schema({
   city: String,
   state: String,
   country: String,
+  bank: {
+    name: String,
+    accountNumber: String,
+    accountName: String
+  },
+  categories: [String],
   shops: [{ 
     ref: 'Shops',
     type: Schema.Types.ObjectId
@@ -43,6 +47,10 @@ const UsersSchema = new Schema({
     type: Boolean
   },
   isVerified: {
+    default: false,
+    type: Boolean
+  },
+  isBlocked: {
     default: false,
     type: Boolean
   }

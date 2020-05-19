@@ -2,15 +2,17 @@ const cloudinary = require('cloudinary');
 
 const upload = (req, res, next) => {
   try {
-    const values = Object.values(req.files);
+    console.log(req.files)
 
-    if (!values || values.length < 1) {
-      return res.status(400).send({
-        data: null,
-        message: 'Image is required',
-        error: true
-      })
+    if (!req.files) {
+      // return res.status(400).send({
+      //   data: null,
+      //   message: 'Image is required',
+      //   error: true
+      // })
+      return next()
     } else {
+      const values = Object.values(req.files);
       const promises = values.map((file) => cloudinary.uploader.upload(file.path));
 
       Promise
