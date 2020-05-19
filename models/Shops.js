@@ -25,10 +25,32 @@ const ShopsSchema = new Schema({
 		accountNumber: String,
 		accountName: String
 	},
+	deliveryPrices: [{
+		state: String,
+		price: Number,
+		time: String,
+	}],
+	address: String,
+	isRegisteredBusiness: {
+		default: false,
+		type: Boolean,
+	},
+	reviews: [{
+		ref: 'Reviews',
+		type: Schema.Types.ObjectId
+	}],
+	overallRating: {
+		type: Number,
+		default: 0
+	},
 	isDeleted: {
 		default: false,
 		type: Boolean
 	},
+	isBlocked: {
+		default: false,
+		type: Boolean
+	}
 }, {
 		timestamps: true
 	});
