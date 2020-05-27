@@ -26,10 +26,6 @@ const ProductsSchema = new Schema({
 		type: Number,
 		required: true
 	},
-	deliveryTime: {
-		type: Number,
-		required: true
-	},
 	shop: {
 		ref: 'Shops',
 		type: Schema.Types.ObjectId
