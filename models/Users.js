@@ -26,10 +26,14 @@ const UsersSchema = new Schema({
   city: String,
   state: String,
   country: String,
-  bank: {
+  banks: [{
     name: String,
     accountNumber: String,
     accountName: String
+  }],
+  availableBalance: {
+    type: Number,
+    default: 0,
   },
   categories: [String],
   shops: [{ 
