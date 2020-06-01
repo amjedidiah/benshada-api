@@ -1,7 +1,7 @@
 {
   "name": "jedi-api",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@sendgrid/mail": "^7.0.1",
     "bcrypt": "^4.0.1",
@@ -24,7 +24,17 @@
     "passport-local": "^1.0.0",
     "path": "^0.12.7"
   },
+  "directories": {
+    "test": "__tests__"
+  },
   "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "start": "node app.js $PORT=3000"
+  },
+  "devDependencies": {
+    "jest": "^26.0.1",
+    "supertest": "^4.0.2"
   }
 }
