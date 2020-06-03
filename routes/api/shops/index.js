@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const auth = require('../../auth')
 const Shops = require('../../../models/Shops')
+const Notification = require('../../../models/Notifications')
 
 router.get('/', auth.optional, (req, res) => {
 	return Shops.find({ ...req.query, isDeleted: false })
@@ -60,14 +61,28 @@ router.get('/:id', auth.optional, (req, res) => {
 })
 
 router.put('/:id', auth.required, (req, res) => {
-	const { id } = req.params
+  const { id } = req.params
+  const { isBlocked } = req.body
 
-	return Shops.findByIdAndUpdate(id, { ...req.body }, { upsert: false })
-		.then(() => res.status(200).send({
-			data: null,
-			message: 'Shop updated successfully',
-			error: false
-		}))
+	return Shops.findByIdAndUpdate(id, { ...req.body }, { upsert: false, new: true })
+		.then(data => {
+      if (isBlocked) {
+        new Notification({
+          title: `Shop ${isBlocked ? 'blocked' : 'unblocked'}`,
+          description: `Your shop, ${data.name} has been ${isBlocked ? 'blocked' : 'unblocked'}`,
+          user: data.user,
+        })
+          .save()
+          .then(() => null)
+          .catch(() => null)
+      }
+
+      return res.status(200).send({
+        data,
+        message: 'Shop updated successfully',
+        error: false
+      })
+    })
 		.catch(err => res.status(500).send({
 			data: null,
 			message: err,

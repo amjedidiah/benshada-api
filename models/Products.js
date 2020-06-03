@@ -69,7 +69,11 @@ const ProductsSchema = new Schema({
 	discountPercentage: {
 		type: Number,
 		default: 0
-	},
+  },
+  isBlocked: {
+    default: false,
+    type: Boolean
+  },
 	isDeleted: {
 		default: false,
 		type: Boolean
