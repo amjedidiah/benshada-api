@@ -2,6 +2,7 @@ const router = require('express').Router()
 const auth = require('../../auth')
 const Orders = require('../../../models/Orders')
 const Users = require('../../../models/Users')
+const Notification = require('../../../models/Notifications')
 // const nodeMailer = require('nodemailer')
 // const transporter = nodeMailer.createTransport({
 // 	host: 'mail.bubbue.com',
@@ -19,7 +20,7 @@ const Users = require('../../../models/Users')
 // })
 // const from = 'noreply@bubbue.com'
 
-router.get('/', auth.optional, (req, res) => {
+router.get('/', auth.required, (req, res) => {
 	return Orders.find({ ...req.query, isDeleted: false })
 		.populate('user', '_id name city')
 		.populate('products', '_id name description price discountPercentage')
@@ -95,14 +96,28 @@ router.get('/:id', auth.optional, (req, res) => {
 })
 
 router.put('/:id', auth.required, (req, res) => {
-	const { id } = req.params
+  const { id } = req.params
+  const { status } = req.body
 
 	return Orders.findByIdAndUpdate(id, { ...req.body }, { upsert: false })
-		.then(() => res.status(200).send({
-			data: null,
-			message: 'Order updated successfully',
-			error: false
-		}))
+		.then(() => {
+      if (status){
+        new Notification({
+          title: 'Ticket status changed',
+          description: `The status of one of your tickets has changed to ${status}`,
+          user: data.user,
+        })
+          .save()
+          .then(() => null)
+          .catch(() => null)
+      }
+
+      return res.status(200).send({
+        data: null,
+        message: 'Order updated successfully',
+        error: false
+      })
+    })
 		.catch(err => res.status(500).send({
 			data: null,
 			message: err,
