@@ -1,14 +1,14 @@
 const router = require('express').Router()
 const auth = require('../../auth')
-const Chat = require('../../../models/Chat')
+const Testimonials = require('../../../models/Testimonials')
 
-router.get('/', auth.required, (req, res) => {
-  Chat
+router.get('/', auth.optional, (req, res) => {
+  Testimonials
     .find({ ...req.query, isDeleted: false })
     .populate('user', '_id name email')
     .then(data => res.status(200).send({
       data,
-      message: 'All messages fetched successfully',
+      message: 'All testimonials fetched successfully',
       error: false
     }))
     .catch(err => res.status(500).send({
@@ -19,11 +19,11 @@ router.get('/', auth.required, (req, res) => {
 })
 
 router.post('/', auth.required, (req, res) => {
-  new Chat({ ...req.body })
+  new Testimonials({ ...req.body })
     .save()
     .then(data => res.status(200).send({
       data,
-      message: 'Message sent successfully',
+      message: 'Testimonial added successfully',
       error: false
     }))
     .catch(err => res.status(500).send({
@@ -33,16 +33,15 @@ router.post('/', auth.required, (req, res) => {
     }))
 })
 
-router.get('/:user', auth.required, (req, res) => {
-  const { user } = req.params
-  console.log(user)
+router.get('/:id', auth.required, (req, res) => {
+  const { id } = req.params
 
-  Chat
-    .find({ ...req.query, user, isDeleted: false })
+  Testimonials
+    .find({ ...req.query, _id: id, isDeleted: false })
     .populate('user', '_id name email')
     .then(data => res.status(200).send({
       data,
-      message: 'Message fetched successfully',
+      message: 'Testimonials fetched successfully',
       error: false
     }))
     .catch(err => res.status(500).send({
@@ -55,11 +54,11 @@ router.get('/:user', auth.required, (req, res) => {
 router.put('/:id', auth.required, (req, res) => {
   const { id } = req.params
 
-  Chat
+  Testimonials
     .findByIdAndUpdate(id, { ...req.body }, { new: true })
     .then(data => res.status(200).send({
       data,
-      message: 'Message updated successfully',
+      message: 'Testimonial updated successfully',
       error: false
     }))
     .catch(err => res.status(500).send({
@@ -72,11 +71,11 @@ router.put('/:id', auth.required, (req, res) => {
 router.delete('/:id', auth.required, (req, res) => {
   const { id } = req.params
 
-  Chat
+  Testimonials
     .findByIdAndDelete(id, { ...req.body })
     .then(() => res.status(200).send({
       data: null,
-      message: 'Message deleted successfully',
+      message: 'Testimonial deleted successfully',
       error: false
     }))
     .catch(err => res.status(500).send({

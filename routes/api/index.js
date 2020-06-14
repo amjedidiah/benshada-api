@@ -12,5 +12,7 @@ router.use('/transactions', require('./transactions/'));
 router.use('/chat', require('./chat/'))
 router.use('/tickets', require('./ticket/'))
 router.use('/notifications', require('./notifications/'))
+router.use('/testimonials', require('./testimonials/'))
+router.use('/subscriptions', require('./subscriptions/'))
 
 module.exports = router;
