@@ -7,7 +7,10 @@ const upload = require('../../../config/upload')
 const Crypto = require('crypto-js')
 
 router.get('/', auth.required, (req, res) => {
-	return Users.find({ ...req.query, isDeleted: false }, { hash: 0, salt: 0 })
+  return Users.find({ ...req.query, isDeleted: false }, { hash: 0, salt: 0 })
+    .populate('saved')
+    .populate('cart')
+    .populate('shops')
 		.then(data => res.status(200).send({
 				data,
 				message: 'Users fetched successfully',
@@ -23,7 +26,11 @@ router.get('/', auth.required, (req, res) => {
 router.get('/:email', auth.required, (req, res) => {
 	const { email } = req.params
 
-	return Users.findOne({ email, isDeleted: false }, { hash: 0, salt: 0 })
+  return Users
+    .findOne({ email, isDeleted: false }, { hash: 0, salt: 0 })
+    .populate('saved')
+    .populate('cart')
+    .populate('shops')
 		.then(data => {
 			if (data === null) res.status(404).send({
 				data,
@@ -183,7 +190,11 @@ router.post('/login', auth.optional, (req, res) => {
 		error: true
 	})
 
-	return Users.findOne({ email, isDeleted: false })
+  return Users
+    .findOne({ email, isDeleted: false })
+    .populate('saved')
+    .populate('cart')
+    .populate('shops')
 		.then(user => {
 			if (!user) res.status(404).send({
 				data: null,

@@ -40,6 +40,10 @@ const UsersSchema = new Schema({
     ref: 'Products',
     type: Schema.Types.ObjectId
   }],
+  cart: [{
+    ref: 'Products',
+    type: Schema.Types.ObjectId
+  }],
   hash: String,
   salt: String,
   isDeleted: {
@@ -98,6 +102,9 @@ UsersSchema.methods.toAuthJSON = function() {
     state: this.state,
     image: this.image,
     token: this.generateJWT(),
+    saved: this.saved,
+    cart: this.cart,
+    shops: this.shops,
   };
 };
 

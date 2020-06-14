@@ -14,6 +14,8 @@ router.use('/tickets', require('./ticket/'))
 router.use('/notifications', require('./notifications/'))
 router.use('/testimonials', require('./testimonials/'))
 router.use('/subscriptions', require('./subscriptions/'))
+=======
 router.use('/cart', require('./cart'))
+>>>>>>> origin/cart
 
 module.exports = router;
