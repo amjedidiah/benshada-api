@@ -4,6 +4,7 @@ const Products = require('../../../models/Products')
 const Shops = require('../../../models/Shops')
 const Users = require('../../../models/Users')
 const upload = require('../../../config/upload')
+const Notification = require('../../../models/Notifications')
 
 router.get('/', auth.optional, (req, res) => {
 	return Products.find({ ...req.query, isDeleted: false })
@@ -99,11 +100,23 @@ router.put('/:id', auth.required, upload, (req, res) => {
 
 	if (image) data = { ...req.data, image }
 
-	return Products.findByIdAndUpdate(id, data, { upsert: false })
-		.then(() => res.status(200).send({
-			data: null,
-			message: 'Product updated successfully'
-		}))
+	return Products.findByIdAndUpdate(id, data, { upsert: false, new: true })
+		.then(data => {
+      if (isBlocked) {
+        new Notification({
+          title: `Product ${isBlocked ? 'blocked' : 'unblocked'}`,
+          description: `Your product, ${data.name} has been ${isBlocked ? 'blocked' : 'unblocked'}`,
+          user: data.user,
+        })
+          .save()
+          .then(() => null)
+          .catch(() => null)
+      }
+      return res.status(200).send({
+        data: null,
+        message: 'Product updated successfully'
+      })
+    })
 		.catch(err => res.status(500).send({
 			data: null,
 			message: err,
