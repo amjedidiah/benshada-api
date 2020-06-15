@@ -42,11 +42,7 @@ router.get('/:user', auth.required, (req, res) => {
     .populate('user', '_id name email')
     .then(data => res.status(200).send({
       data,
-<<<<<<< HEAD
       message: 'Message fetched successfully',
-=======
-      message: 'Messages fetched successfully',
->>>>>>> origin/chat
       error: false
     }))
     .catch(err => res.status(500).send({
