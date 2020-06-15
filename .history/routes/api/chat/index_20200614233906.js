@@ -59,7 +59,11 @@ router.put('/:id', auth.required, (req, res) => {
     .findByIdAndUpdate(id, { ...req.body }, { new: true })
     .then(data => res.status(200).send({
       data,
+<<<<<<< HEAD
       message: 'Message updated successfully',
+=======
+      message: 'Messages updated successfully',
+>>>>>>> origin/chat
       error: false
     }))
     .catch(err => res.status(500).send({
@@ -76,7 +80,11 @@ router.delete('/:id', auth.required, (req, res) => {
     .findByIdAndDelete(id, { ...req.body })
     .then(() => res.status(200).send({
       data: null,
+<<<<<<< HEAD
       message: 'Message deleted successfully',
+=======
+      message: 'Messages deleted successfully',
+>>>>>>> origin/chat
       error: false
     }))
     .catch(err => res.status(500).send({

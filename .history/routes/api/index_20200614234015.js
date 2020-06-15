@@ -10,13 +10,10 @@ router.use('/blog', require('./blog/'));
 router.use('/orders', require('./orders/'));
 router.use('/transactions', require('./transactions/'));
 router.use('/chat', require('./chat/'))
-<<<<<<< HEAD
 router.use('/tickets', require('./ticket/'))
 router.use('/notifications', require('./notifications/'))
 router.use('/testimonials', require('./testimonials/'))
 router.use('/subscriptions', require('./subscriptions/'))
 router.use('/cart', require('./cart'))
-=======
->>>>>>> origin/chat
 
 module.exports = router;
