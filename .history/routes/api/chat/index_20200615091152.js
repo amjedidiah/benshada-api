@@ -76,7 +76,11 @@ router.delete('/:id', auth.required, (req, res) => {
     .findByIdAndDelete(id, { ...req.body })
     .then(() => res.status(200).send({
       data: null,
+<<<<<<< HEAD
       message: 'Message deleted successfully',
+=======
+      message: 'Messages deleted successfully',
+>>>>>>> origin/chat
       error: false
     }))
     .catch(err => res.status(500).send({
