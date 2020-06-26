@@ -337,8 +337,8 @@ router.post('/change-password', auth.required, (req, res) => {
 				error: true
 			})
 			else if (user.validatePassword(oldPassword)){
-				const finalUser = user.getPassword(password)
-				Users.findOneAndUpdate({ email }, { ...finalUser })
+				user.setPassword(password)
+				Users.findOneAndUpdate({ email }, { salt: user.salt, hash: user.hash })
 					.then(() => res.status(200).send({
 						data: user.toAuthJSON(),
 						message: 'Password reset Successfully',
