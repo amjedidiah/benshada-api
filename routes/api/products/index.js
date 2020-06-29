@@ -102,7 +102,7 @@ router.put('/:id', auth.required, upload, (req, res) => {
 
 	return Products.findByIdAndUpdate(id, data, { upsert: false, new: true })
 		.then(data => {
-      if (isBlocked) {
+      if (data && data.isBlocked) {
         new Notification({
           title: `Product ${isBlocked ? 'blocked' : 'unblocked'}`,
           description: `Your product, ${data.name} has been ${isBlocked ? 'blocked' : 'unblocked'}`,
@@ -117,11 +117,11 @@ router.put('/:id', auth.required, upload, (req, res) => {
         message: 'Product updated successfully'
       })
     })
-		.catch(err => res.status(500).send({
-			data: null,
-			message: err,
-			error: true
-		}))
+	.catch(err => res.status(500).send({
+		data: null,
+		message: err,
+		error: true
+	}))
 })
 
 router.delete('/:id', auth.required, (req, res) => {

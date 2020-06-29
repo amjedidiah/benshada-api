@@ -28,6 +28,7 @@
     "test": "__tests__"
   },
   "scripts": {
+    "dev": "nodemon",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "jest": "^26.0.1",
+    "nodemon": "^2.0.4",
     "supertest": "^4.0.2"
   }
 }

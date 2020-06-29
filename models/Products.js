@@ -12,16 +12,21 @@ const ProductsSchema = new Schema(
       type: String,
       required: true,
     },
-    longDescription: {
+    color: {
       type: String,
       required: true,
     },
-    specifications: {
-      size: String,
-      color: String,
-      mainMaterial: String,
-      weight: String,
-      productionCountry: String,
+    mainMaterial: {
+      type: String,
+      required: true,
+    },
+    productionCountry: {
+      type: String,
+      required: true,
+    },
+    longDescription: {
+      type: String,
+      required: true,
     },
     guarantee: {
       type: Number,
@@ -44,7 +49,7 @@ const ProductsSchema = new Schema(
     gender: {
       type: String,
       required: true,
-      enum: ["male", "female"],
+      enum: ["male", "female", "unisex"],
     },
     quantity: {
       type: Number,
@@ -77,6 +82,10 @@ const ProductsSchema = new Schema(
       default: 0,
     },
     discountPercentage: {
+      type: Number,
+      default: 0,
+    },
+    batchQuality: {
       type: Number,
       default: 0,
     },
