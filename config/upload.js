@@ -2,7 +2,6 @@ const cloudinary = require('cloudinary');
 
 const upload = (req, res, next) => {
   try {
-    console.log(req.files)
 
     if (!req.files) {
       // return res.status(400).send({

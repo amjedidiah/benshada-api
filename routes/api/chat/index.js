@@ -35,7 +35,6 @@ router.post('/', auth.required, (req, res) => {
 
 router.get('/:user', auth.required, (req, res) => {
   const { user } = req.params
-  console.log(user)
 
   Chat
     .find({ ...req.query, user, isDeleted: false })

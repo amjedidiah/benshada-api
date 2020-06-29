@@ -11,6 +11,8 @@ const ShopsSchema = new Schema({
 		type: String,
 		required: true
 	},
+	state: String,
+	phone: String,
 	user: {
 		type: Schema.Types.ObjectId,
 		ref: 'Users',
@@ -20,17 +22,18 @@ const ShopsSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'Products'
 	}],
+	image: String,
 	bank: {
 		name: String,
 		accountNumber: String,
 		accountName: String
 	},
-	deliveryPrices: [{
-		state: String,
-		price: Number,
-		time: String,
-	}],
 	address: String,
+	CACNumber: String,
+    returns: {
+      type: Number,
+      default: 0,
+    },
 	isRegisteredBusiness: {
 		default: false,
 		type: Boolean,

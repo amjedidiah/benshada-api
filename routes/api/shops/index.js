@@ -2,6 +2,7 @@ const router = require('express').Router()
 const auth = require('../../auth')
 const Shops = require('../../../models/Shops')
 const Notification = require('../../../models/Notifications')
+const upload = require('../../../config/upload')
 
 router.get('/', auth.optional, (req, res) => {
 	return Shops.find({ ...req.query, isDeleted: false })
@@ -60,11 +61,13 @@ router.get('/:id', auth.optional, (req, res) => {
 		}))
 })
 
-router.put('/:id', auth.required, (req, res) => {
+router.put('/:id', auth.required, upload, (req, res) => {
   const { id } = req.params
   const { isBlocked } = req.body
+  const image = req.data ? req.data.image : null
+  const shop = image ? { ...req.body, image:  image[0] } : {...req.body}
 
-	return Shops.findByIdAndUpdate(id, { ...req.body }, { upsert: false, new: true })
+	return Shops.findByIdAndUpdate(id, shop, { upsert: false, new: true })
 		.then(data => {
       if (isBlocked) {
         new Notification({

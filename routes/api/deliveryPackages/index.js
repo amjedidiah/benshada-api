@@ -82,7 +82,6 @@ router.delete('/:id', auth.required, (req, res) => {
     .findOneAndUpdate(id, { isDeleted: true }, { new: true })
     .populate('deliveryCompany')
     .then(data => {
-      console.log(data)
       const { _id, deliveryPackages } = data.deliveryCompany
 
       const newPackages = deliveryPackages.filter(item => item._id != id)

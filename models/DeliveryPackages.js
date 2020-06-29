@@ -8,7 +8,11 @@ const PackageSchema = new Schema({
     required: true,
     ref: 'DeliveryCompanies'
   },
-  state: {
+  to: {
+    type: String,
+    required: true
+  },
+  from: {
     type: String,
     required: true
   },

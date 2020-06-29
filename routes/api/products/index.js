@@ -94,13 +94,10 @@ router.get('/:id', auth.optional, (req, res) => {
 
 router.put('/:id', auth.required, upload, (req, res) => {
 	const { id } = req.params
-	const { image } = req.data
+	const image = req.data ? req.data.image : null
+	const product = image ? { ...req.body, image:  image[0] } : {...req.body}
 
-	let data = req.body
-
-	if (image) data = { ...req.data, image }
-
-	return Products.findByIdAndUpdate(id, data, { upsert: false, new: true })
+	return Products.findByIdAndUpdate(id, product, { upsert: false, new: true })
 		.then(data => {
       if (data && data.isBlocked) {
         new Notification({

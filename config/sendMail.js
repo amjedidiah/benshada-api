@@ -21,7 +21,6 @@ const sendMail = async (type, email, name, data, res) => {
       },
     };
     const send = await sgMail.send(msg);
-    console.log(send)
   } catch (err) {
     return res.status(500).send({
       data: null,
