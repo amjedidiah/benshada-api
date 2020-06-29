@@ -55,9 +55,10 @@ router.put('/:email', auth.required, upload, (req, res) => {
 	const { email } = req.params
 	console.log(email)
 	const image = req.data ? req.data.image : null
+	const user = image ? { ...req.body, image:  image[0] } : {...req.body}
 
 	return Users
-		.findOneAndUpdate({ email }, { ...req.body, image: image ? image[0] : null }, { new: true })
+		.findOneAndUpdate({ email }, user, { new: true })
 		.then(data => {
 			res.status(200).send({
 				data: data,
