@@ -62,7 +62,7 @@ router.post('/', auth.required, (req, res) => {
 router.put('/:id', auth.required, (req, res) => {
   const { id } = req.params
   DeliveryPackages
-    .findOneAndUpdate(id, { ...req.body }, { new: true })
+    .findByIdAndUpdate(id, { ...req.body }, { new: true })
     .populate('deliveryCompany')
     .then(data => res.status(200).send({
       data,
@@ -79,7 +79,7 @@ router.put('/:id', auth.required, (req, res) => {
 router.delete('/:id', auth.required, (req, res) => {
   const { id } = req.params
   DeliveryPackages
-    .findOneAndUpdate(id, { isDeleted: true }, { new: true })
+    .findByIdAndUpdate(id, { isDeleted: true }, { new: true })
     .populate('deliveryCompany')
     .then(data => {
       const { _id, deliveryPackages } = data.deliveryCompany

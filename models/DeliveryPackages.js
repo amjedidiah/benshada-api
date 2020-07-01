@@ -8,32 +8,23 @@ const PackageSchema = new Schema({
     required: true,
     ref: 'DeliveryCompanies'
   },
-  to: {
-    type: String,
-    required: true
-  },
-  from: {
-    type: String,
-    required: true
-  },
+  to: String,
+  from: String,
   method: {
     type: String,
     required: true,
-    enum: ['pickup', 'doorstep']
+    enum: ['pickup', 'delivery']
   },
   pickupStation: {
     name: String,
     address: String,
+    state: String
   },
   cost: {
     type: Number,
     required: true
   },
-  duration: {
-    type: Number,
-    required: true
-  },
-  address: String,
+  duration: Number,
   maxDeliverySize: {
     type: Number,
     required: true

@@ -11,6 +11,7 @@ const CompanySchema = new Schema({
     type: String,
     required: true
   },
+  image: String,
   phone: {
     type: String,
     required: true
