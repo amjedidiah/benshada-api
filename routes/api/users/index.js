@@ -53,7 +53,6 @@ router.get('/:email', auth.required, (req, res) => {
 
 router.put('/:email', auth.required, upload, (req, res) => {
 	const { email } = req.params
-	console.log(email)
 	const image = req.data ? req.data.image : null
 	const user = image ? { ...req.body, image:  image[0] } : {...req.body}
 
@@ -118,7 +117,6 @@ router.post('/signup', auth.optional, upload, (req, res) => {
 					.then(async data => {
 						const { email, name } = data
 						const link = Crypto.AES.encrypt(email, 'benshadaSecret').toString()
-						console.log(link)
 						await sendEmail('verifyAccount', email, name, { link }, res)
 
 						return res.status(200).send({
@@ -263,7 +261,6 @@ router.post('/send-reset-email', auth.optional, (req, res) => {
 				})
 				else {
 					const link = Crypto.AES.encrypt(email, 'benshadaSecret').toString()
-					console.log(link)
 					await sendEmail('passwordReset', email, data.name, { link }, res)
 
 					return res.status(200).send({
