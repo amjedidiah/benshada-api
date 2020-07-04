@@ -16,10 +16,10 @@ const CompanySchema = new Schema({
     type: String,
     required: true
   },
-  headOffice: {
+  states: [{
     type: String,
     required: true
-  },
+  }],
   contactPerson: {
     type: Schema.Types.ObjectId,
     required: true,
