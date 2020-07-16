@@ -51,6 +51,28 @@ const UsersSchema = new Schema({
     ref: 'Products',
     type: Schema.Types.ObjectId
   }],
+  cards: [{
+    cvv: {
+      type: String,
+      required: true,
+    },
+    expiry: {
+      type: String,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    number: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    }
+  }],
   hash: String,
   salt: String,
   isDeleted: {
