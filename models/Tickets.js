@@ -3,15 +3,10 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose
 
 const TicketsSchema = new Schema({
-  user: {
+  owner: {
     ref: 'Users',
     type: Schema.Types.ObjectId,
     required: true
-  },
-  type: {
-    type: String,
-    required: true,
-    enum: ['return quest', 'complaint']
   },
   title: {
     type: String,
@@ -21,23 +16,25 @@ const TicketsSchema = new Schema({
     type: String,
     required: true,
   },
-  product: {
-    type: Schema.Types.ObjectId,
-    ref: 'Products'
+  image: [String],
+  type: {
+    type: String,
+    required: true,
+    enum: ['order','user', 'shop', 'other']
   },
-  order: {
-    type: Schema.Types.ObjectId,
-    ref: 'Orders'
-  },
-  images: [String],
-  responses: [{
-    description: String,
-    title: String,
-  }],
+  user: String,
+  shop: String,
+  orderNumber: String,
   status: {
     type: String,
     default: 'pending'
   },
+  responses: [{
+    createdAt: String,
+    description: String,
+    _id: String,
+    userID: String
+  }],
   isDeleted: {
     default: false,
     type: Boolean
