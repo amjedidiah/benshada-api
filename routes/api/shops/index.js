@@ -73,6 +73,8 @@ router.put('/:id', auth.required, upload, (req, res) => {
         new Notification({
           title: `Shop ${isBlocked ? 'blocked' : 'unblocked'}`,
           description: `Your shop, ${data.name} has been ${isBlocked ? 'blocked' : 'unblocked'}`,
+		  type: 'shop',
+		  identifier: id,
           user: data.user,
         })
           .save()

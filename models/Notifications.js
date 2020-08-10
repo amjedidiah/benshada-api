@@ -16,6 +16,14 @@ const NotificationsSchema = new Schema({
     type: String,
     required: true,
   },
+  type: {
+    type: String,
+    required: true,
+  },
+  identifier: {
+    type: String,
+    required: true,
+  },
   read: {
     type: Boolean,
     default: false
