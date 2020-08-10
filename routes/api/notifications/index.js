@@ -22,9 +22,10 @@ router.get('/:user', auth.required, (req, res) => {
 
 router.post('/read/:id', auth.required, (req, res) => {
   const { id } = req.params
+  const {read} = req.body
 
   Notification
-    .findByIdAndUpdate(id, { read: true }, { new: true })
+    .findByIdAndUpdate(id, { read: !read }, { new: true })
     .then(data => res.status(200).send({
       data,
       message: 'Notification updated successfully',

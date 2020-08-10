@@ -103,6 +103,8 @@ router.put('/:id', auth.required, upload, (req, res) => {
         new Notification({
           title: `Product ${isBlocked ? 'blocked' : 'unblocked'}`,
           description: `Your product, ${data.name} has been ${isBlocked ? 'blocked' : 'unblocked'}`,
+		  type: 'product',
+		  identifier: id,
           user: data.user,
         })
           .save()
