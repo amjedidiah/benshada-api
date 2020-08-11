@@ -2,6 +2,8 @@
 const express = require('express');
 const router = express.Router();
 
+router.get("/", (req,res) => res.send("Welcome to Benshada Place API<br />We'll share our docs here soon"));
+
 router.use('/users', require('./users/'));
 router.use('/shops', require('./shops/'));
 router.use('/products', require('./products/'));
