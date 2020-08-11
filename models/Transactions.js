@@ -8,11 +8,6 @@ const TransactionsSchema = new Schema({
 		ref: 'Users',
 		required: true
 	},
-	order: {
-		type: Schema.Types.ObjectId,
-		ref: 'Orders',
-		required: true
-	},
 	trxnRef: {
 		type: String,
 		required: true
