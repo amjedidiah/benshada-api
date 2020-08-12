@@ -27,6 +27,7 @@ const OrdersSchema = new Schema(
     status: {
       type: String,
       default: "unpaid",
+      enum: ['unpaid', "paid", 'shipped', 'arrived','transported','delivered', 'picked']
     },
     totalPrice: Number,
     transaction: {
