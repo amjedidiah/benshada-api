@@ -6,14 +6,14 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const errorHandler = require("errorhandler");
 const routes = require("./routes/");
-const cloudinary = require("cloudinary")
-const formData = require("express-form-data")
-const { 
+const cloudinary = require("cloudinary");
+const formData = require("express-form-data");
+const {
   DB_DEV,
   DB_PROD,
   CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY,
-  CLOUDINARY_API_SECRET
+  CLOUDINARY_API_SECRET,
 } = require("./config/constants");
 //Configure mongoose's promise to global promise
 mongoose.promise = global.Promise;
@@ -23,7 +23,7 @@ const isProduction = process.env.NODE_ENV === "production";
 
 //Initiate our app
 const app = express();
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 8000;
 
 // Setup cloud storage
 cloudinary.config({
@@ -44,13 +44,23 @@ app.use(
     secret: "secret",
     cookie: { maxAge: 60000 },
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
   })
 );
 
 if (!isProduction) {
   app.use(errorHandler());
 }
+
+app.use((req, res, next) => {
+  if (isProduction === "production") {
+    if (req.headers.host === "api.benshada.com")
+      return res.redirect(301, "https://www.api.benshada.com");
+    if (req.headers["x-forwarded-proto"] !== "https")
+      return res.redirect("https://" + req.headers.host + req.url);
+    else return next();
+  } else return next();
+});
 
 //Configure Mongoose Chibuokem
 // mongoose.connect(isProduction ? DB_PROD : DB_DEV, { useNewUrlParser: true })
@@ -71,4 +81,6 @@ require("./config/passport");
 
 app.use(routes);
 
-app.listen(port, () => console.log(`Server running on http://localhost:${port}/`));
+app.listen(port, () =>
+  console.log(`Server running on http://localhost:${port}/`)
+);
