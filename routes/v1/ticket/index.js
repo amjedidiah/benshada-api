@@ -82,7 +82,7 @@ router.put("/:id", auth.required, (req, res) => {
       if (status) {
         new Notification({
           title: "Ticket status changed",
-          description: `The status of one of your tickets: ${id} has changed to ${status}`,
+          description: `The status of one of your tickets: ${data.title} has changed to ${status}`,
           type: 'ticket',
           identifier: id,
           user: data.user,
