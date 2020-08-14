@@ -52,11 +52,15 @@ if (!isProduction) {
   app.use(errorHandler());
 }
 
-app.use((req, res, next) =>
-  req.headers["x-forwarded-proto"] !== "https"
-    ? res.redirect("https://" + req.headers.host + req.url)
-    : next()
-);
+app.use((req, res, next) => {
+  if (isProduction) {
+    if (req.headers.host === "api.benshada.com")
+      return res.redirect(301, "https://www.api.benshada.com");
+    if (req.headers["x-forwarded-proto"] !== "https")
+      return res.redirect("https://" + req.headers.host + req.url);
+    else return next();
+  } else return next();
+});
 
 //Configure Mongoose Chibuokem
 // mongoose.connect(isProduction ? DB_PROD : DB_DEV, { useNewUrlParser: true })
@@ -77,6 +81,6 @@ require("./config/passport");
 
 app.use(routes);
 
-app.listen(port, (req, res) =>
-  console.log(`Server running on port:${port}`)
+app.listen(port, () =>
+  console.log(`Server running on http://localhost:${port}/`)
 );
