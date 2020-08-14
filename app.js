@@ -53,7 +53,7 @@ if (!isProduction) {
 }
 
 app.use((req, res, next) => {
-  if (isProduction) {
+  if (isProduction === "production") {
     if (req.headers.host === "api.benshada.com")
       return res.redirect(301, "https://www.api.benshada.com");
     if (req.headers["x-forwarded-proto"] !== "https")
