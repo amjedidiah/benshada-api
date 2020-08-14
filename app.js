@@ -1,4 +1,6 @@
 const express = require("express");
+const http = require("http");
+const express_enforces_ssl = require("express-enforces-ssl");
 const path = require("path");
 const bodyParser = require("body-parser");
 const session = require("express-session");
@@ -52,12 +54,6 @@ if (!isProduction) {
   app.use(errorHandler());
 }
 
-app.use((req, res, next) =>
-  req.headers["x-forwarded-proto"] !== "https"
-    ? res.redirect("https://" + req.headers.host + req.url)
-    : next()
-);
-
 //Configure Mongoose Chibuokem
 // mongoose.connect(isProduction ? DB_PROD : DB_DEV, { useNewUrlParser: true })
 //   .then(() => console.log('DB Connected'))
@@ -77,6 +73,10 @@ require("./config/passport");
 
 app.use(routes);
 
-app.listen(port, (req, res) =>
-  console.log(`Server running on port:${port}`)
-);
+app.enable("trust proxy");
+app.use(express_enforces_ssl());
+http
+  .createServer(app)
+  .listen(port, () =>
+    console.log(`Express server listening on port ${port}`)
+  );
